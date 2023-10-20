@@ -21,7 +21,7 @@ You can immediately include them in your zone file and use them in your maps.
 
 To preview the post effects first set the Rendering to No Lighting and then set the Shape to Plane.
 
-Black Ops II Vision previews aren't a 100% accurate to the game so it can be a bit brighter or darker in-game.
+Visionset effects are using Black Ops II vision settings and their previews aren't a 100% accurate to the game so it can be a bit brighter or darker in-game.
 
 # Credits
 * LG
