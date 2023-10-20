@@ -105,7 +105,12 @@ float4 ps_main(const PixelInput pixel) : SV_TARGET
 	r0.x = max(r0.z, r0.x);
 	r1.xyzw = frameBuffer.Sample(bilinearClampler, pixel.texCoords).xyzw;
 	#if TOOLSGFX
-	r1.xyz = srgb_to_linear(postfx_apply_t6_lut_visionset(lutTexture, bilinearClampler, float4(srgb_to_linear(r1.xyz), 1)).xyz);
+	r1.xyz = srgb_to_linear(r1.xyz);
+	#if USE_T6_VISIONSET
+	r1.xyz = srgb_to_linear(postfx_apply_t6_lut_visionset(lutTexture, bilinearClampler, r1.xyzw).xyz);
+	#else
+	r1.xyz = srgb_to_linear(postfx_apply_t6_lut(lutTexture, bilinearClampler, r1.xyzw).xyz);
+	#endif
 	#endif
 	r1.xyz = postfx_tone_map_framebuffer(r1.xyz);
 	r0.y = dot(r1.xyz, float3(0.300000, 0.590000, 0.110000));
@@ -132,9 +137,12 @@ float4 ps_main(const PixelInput pixel) : SV_TARGET
 	r0.xyz = r0.xyz * 0.250000;
 	
 	#if TOOLSGFX
-
-	r0.xyz = srgb_to_linear(postfx_apply_t6_lut_visionset(lutTexture, bilinearClampler, float4(srgb_to_linear(r0.xyz), 1)).xyz);
-	
+	r0.xyz = srgb_to_linear(r0.xyz);
+	#if USE_T6_VISIONSET
+	r0.xyz = srgb_to_linear(postfx_apply_t6_lut_visionset(lutTexture, bilinearClampler, r0.xyzw).xyz);
+	#else
+	r0.xyz = srgb_to_linear(postfx_apply_t6_lut(lutTexture, bilinearClampler, r0.xyzw).xyz);
+	#endif
 	#endif
 
 	return float4(r0.xyz, 1);
