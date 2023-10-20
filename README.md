@@ -15,7 +15,9 @@
  * zm_whoswho
  * zm_whoswho_visionset
 
-You can include them in your zone file and immediately use them in your maps.
+You can find them in the 'shader_templates' GDT.
+
+You can immediately include them in your zone file and use them in your maps.
 
 To preview the post effects first set the Rendering to No Lighting and then set the Shape to Plane.
 
