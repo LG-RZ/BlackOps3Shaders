@@ -1,0 +1,145 @@
+#include "lit_base_shaders"
+#include "t6_visionset_base"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+Sampler( "bilinearSampler" )
+{
+	tile   = "tile both*"
+	filter = "linear (mip none)"
+}
+
+Texture( "lutTexture" )
+{
+	image    = Image( <colorMap02, $white_diffuse> )
+	semantic = "diffuseMap"
+	tweak    = Tweak()
+	{
+		category	= "Warp"
+		title		= "Preview Black Ops II Lut"
+		sortindex	= "14"
+	}
+}
+
+Texture( "frameBuffer" )
+{
+	image    = Image( <colorMap00, $white_diffuse> )
+	semantic = "diffuseMap"
+	tweak    = Tweak()
+	{
+		category	= "Warp"
+		title		= "Preview Frame Buffer"
+		sortindex	= "15"
+	}
+}
+
+Texture( "distortionMap" )
+{
+	image    = Image( <normalMap, $identitynormalmap> )
+	semantic = "normalMap"
+	tweak    = Tweak()
+	{
+		category	= "Warp"
+		title		= "Distortion Map"
+		sortindex	= "20"
+	}
+}
+
+Texture( "warpMap" )
+{
+	image    = Image( <colorMap01, $white_reveal> )
+	semantic = "revealMap"
+	tweak    = Tweak()
+	{
+		category	= "Warp"
+		title		= "Warp Map"
+		sortindex	= "20"
+	}
+}
+
+float1( "waveWarpScale" )
+{
+	x = <cg00_x>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Wave Warp Scale"
+		sortindex = "30"
+		default   = "0.25"
+		range     = "-1024.0", "128.0", "0.1"
+	}
+}
+
+float1( "boost" )
+{
+	x = <cg00_y>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Boost"
+		sortindex = "35"
+		default   = "1.0"
+		range     = "0.0", "128.0", "0.1"
+	}
+}
+
+float1( "falloff" )
+{
+	x = <cg00_z>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "FallOff"
+		sortindex = "40"
+		default   = "2.0"
+		range     = "0.0", "128.0", "0.1"
+	}
+}
+
+float1( "sceneBlurAmount" )
+{
+	x = <cg00_w>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Scene Blur Amount"
+		sortindex = "45"
+		default   = "3.0"
+		range     = "0.0", "128.0", "0.1"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	defines = "USE_T6_VISIONSET"
+	source = "postfx/zm_afterlife.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		#if TOOLSGFX != "1"
+		frameBuffer = CodeTexture( "resolvedPostSun" )
+		#endif
+	}
+}

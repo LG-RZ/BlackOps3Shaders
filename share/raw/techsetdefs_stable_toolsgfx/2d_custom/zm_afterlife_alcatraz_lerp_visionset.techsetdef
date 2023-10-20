@@ -1,0 +1,198 @@
+#include "lit_base_shaders"
+#include "t6_visionset_base"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+Sampler( "bilinearSampler" )
+{
+	tile   = "tile both*"
+	filter = "linear (mip none)"
+}
+
+Texture( "lutTexture" )
+{
+	image    = Image( <colorMap02, $white_diffuse> )
+	semantic = "diffuseMap"
+	tweak    = Tweak()
+	{
+		category	= "Alcatraz Afterlife"
+		title		= "Preview Black Ops II Lut"
+		sortindex	= "14"
+	}
+}
+
+Texture( "frameBuffer" )
+{
+	image    = Image( <colorMap, $white_diffuse> )
+	semantic = "diffuseMap"
+	tweak    = Tweak()
+	{
+		category	= "Alcatraz Afterlife"
+		title		= "Preview Frame Buffer"
+		sortindex	= "15"
+	}
+}
+
+Texture( "maskMap" )
+{
+	image    = Image( <colorMap00, $white_reveal> )
+	semantic = "revealMap"
+	tweak    = Tweak()
+	{
+		category	= "Alcatraz Afterlife"
+		title		= "Vignette Map"
+		sortindex	= "20"
+	}
+}
+
+Texture( "noiseMap" )
+{
+	image    = Image( <colorMap01, $white_reveal> )
+	semantic = "revealMap"
+	tweak    = Tweak()
+	{
+		category	= "Alcatraz Afterlife"
+		title		= "Noise Map"
+		sortindex	= "20"
+	}
+}
+
+float1( "waveWarpScale" )
+{
+	x     = <cg00_x>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Wave Warp Scale"
+		sortindex = "25"
+		default   = "-0.22"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float1( "scrollSpeed" )
+{
+	x     = <cg00_y>
+	tweak = Tweak()
+	{
+		category  = "Vignette"
+		title     = "Vignette Scroll Speed"
+		sortindex = "21"
+		default   = "-0.4"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float2( "maskRadius" )
+{
+	x     = <cg00_z>
+	y     = <cg00_w>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Mask Radius"
+		sortindex = "30"
+		default   = "0.2", "0.8"
+		range     = "0.0", "1024.0", "0.1"
+	}
+}
+
+float2( "vignetteRadius" )
+{
+	x     = <cg01_x>
+	y     = <cg01_y>
+	tweak = Tweak()
+	{
+		category  = "Vignette"
+		title     = "Vignette Radius"
+		sortindex = "23"
+		default   = "0.42", "1.0"
+		range     = "0.0", "1024.0", "0.1"
+	}
+}
+
+float1( "maskSoftness" )
+{
+	x     = <cg01_z>
+	tweak = Tweak()
+	{
+		category  = "Warp"
+		title     = "Mask Softness"
+		sortindex = "30"
+		default   = "2.0"
+		range     = "0.1", "1024.0", "0.1"
+	}
+}
+
+float1( "vignetteSoftness" )
+{
+	x     = <cg01_w>
+	tweak = Tweak()
+	{
+		category  = "Vignette"
+		title     = "Vignette Softness"
+		sortindex = "22"
+		default   = "2.0"
+		range     = "0.1", "1024.0", "0.1"
+	}
+}
+
+float1( "boost" )
+{
+	x     = <cg02_x>
+	tweak = Tweak()
+	{
+		category  = "Vignette"
+		title     = "Vignette Strength"
+		sortindex = "20"
+		default   = "3.0"
+		range     = "0.0", "1024.0", "0.1"
+	}
+}
+
+Color( "vignetteColor" )
+{
+	value = "srgb_to_linear( <colorTint> )"
+	tweak = Tweak()
+	{
+		category  = "Vignette"
+		title     = "Vignette Color"
+		sortindex = "24"
+		color = true
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	defines = "USE_T6_VISIONSET"
+	source = "postfx/zm_afterlife_alcatraz_lerp.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		#if TOOLSGFX != "1"
+		frameBuffer = CodeTexture( "resolvedPostSun" )
+		#endif
+	}
+}

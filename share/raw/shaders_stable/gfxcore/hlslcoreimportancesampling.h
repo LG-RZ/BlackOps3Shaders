@@ -1,0 +1,4 @@
+#ifndef __GFX_CORE_IMPORTANCE_SAMPLING__
+#define __GFX_CORE_IMPORTANCE_SAMPLING__
+
+#endif

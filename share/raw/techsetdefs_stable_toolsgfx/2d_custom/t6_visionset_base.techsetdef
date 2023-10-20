@@ -1,0 +1,236 @@
+float1( "visionSetBrightness" )
+{
+	x = <cg17_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Vision Set Brightness"
+		sortindex = "180"
+		default   = "1.0"
+		range     = "0.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorRangeS" )
+{
+	x = <cg18_x>
+	y = <cg18_y>
+	z = <cg18_z>
+	w = <cg18_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Range Start"
+		sortindex = "185"
+		default   = "0.062500", "0.5", "0.062500", "0.718750"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorRangeE" )
+{
+	x = <cg19_x>
+	y = <cg19_y>
+	z = <cg19_z>
+	w = <cg19_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Range End"
+		sortindex = "190"
+		default   = "0.5", "0.937500", "0.281250", "0.937500"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorShadowMatrixR" )
+{
+	x = <cg20_x>
+	y = <cg20_y>
+	z = <cg20_z>
+	w = <cg20_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Shadow Matrix Red"
+		sortindex = "195"
+		default   = "1.0", "0.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorShadowMatrixG" )
+{
+	x = <cg21_x>
+	y = <cg21_y>
+	z = <cg21_z>
+	w = <cg21_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Shadow Matrix Green"
+		sortindex = "200"
+		default   = "0.0", "1.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorShadowMatrixB" )
+{
+	x = <cg22_x>
+	y = <cg22_y>
+	z = <cg22_z>
+	w = <cg22_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Shadow Matrix Blue"
+		sortindex = "205"
+		default   = "0.0", "0.0", "1.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorHilightMatrixR" )
+{
+	x = <cg23_x>
+	y = <cg23_y>
+	z = <cg23_z>
+	w = <cg23_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Hilight Matrix Red"
+		sortindex = "210"
+		default   = "1.0", "0.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorHilightMatrixG" )
+{
+	x = <cg24_x>
+	y = <cg24_y>
+	z = <cg24_z>
+	w = <cg24_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Hilight Matrix Green"
+		sortindex = "215"
+		default   = "0.0", "1.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorHilightMatrixB" )
+{
+	x = <cg25_x>
+	y = <cg25_y>
+	z = <cg25_z>
+	w = <cg25_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Hilight Matrix Blue"
+		sortindex = "220"
+		default   = "0.0", "0.0", "1.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorMidtoneMatrixR" )
+{
+	x = <cg26_x>
+	y = <cg26_y>
+	z = <cg26_z>
+	w = <cg26_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Midtone Matrix Red"
+		sortindex = "225"
+		default   = "1.0", "0.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorMidtoneMatrixG" )
+{
+	x = <cg27_x>
+	y = <cg27_y>
+	z = <cg27_z>
+	w = <cg27_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Midtone Matrix Green"
+		sortindex = "230"
+		default   = "0.0", "1.0", "0.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorMidtoneMatrixB" )
+{
+	x = <cg28_x>
+	y = <cg28_y>
+	z = <cg28_z>
+	w = <cg28_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Midtone Matrix Blue"
+		sortindex = "235"
+		default   = "0.0", "0.0", "1.0", "0.0"
+		range     = "-1024.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorFinalGamma" )
+{
+	x = <cg29_x>
+	y = <cg29_y>
+	z = <cg29_z>
+	w = <cg29_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Final Gamma"
+		sortindex = "240"
+		default   = "1.0", "1.0", "1.0", "0.0"
+		range     = "0.0", "1024.0", "0.1"
+	}
+}
+
+float4( "visColorFinalSaturation" )
+{
+	x = <cg30_x>
+	y = <cg30_y>
+	z = <cg30_z>
+	w = <cg30_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Final Saturation"
+		sortindex = "245"
+		default   = "0.212585", "0.715195", "0.072220", "1.0"
+		range     = "0.0", "1.0", "0.1"
+	}
+}
+
+float4( "visColorFinalBlend" )
+{
+	x = <cg31_x>
+	y = <cg31_y>
+	z = <cg31_z>
+	w = <cg31_w>
+	tweak = Tweak()
+	{
+		category  = "T6 Visionset Parameters"
+		title     = "Color Final Blend"
+		sortindex = "250"
+		default   = "1.0", "1.0", "1.0", "0.0"
+		range     = "0.0", "1.0", "0.1"
+	}
+}
