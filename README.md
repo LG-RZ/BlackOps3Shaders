@@ -5,15 +5,21 @@
  Download the latest release and extract all of the files into the Black Ops III directory.
 
 # Usage
- This repo contains 6 ready post effects that can also be previewed in APE:
- * Alcatraz Afterlife (No Visionset)
- * Alcatraz Afterlife (With Visionset)
- * Alcatraz Afterlife Layered (No Visionset)
- * Alcatraz Afterlife Layered (With Visionset)
- * Die Rise Whos Who Afterlife (No Visionset)
- * Die Rise Whos Who Afterlife (With Visionset)
+ This repo includes a base for GBuffer shaders (no techsetdef included)
+ 
+ And it also contains 6 ready to use post effects that can be previewed in APE:
+ * zm_afterlife_alcatraz
+ * zm_afterlife_alcatraz_visionset
+ * zm_afterlife_alcatraz_lerp
+ * zm_afterlife_alcatraz_lerp_visionset
+ * zm_whoswho
+ * zm_whoswho_visionset
 
 You can include them in your zone file and immediately use them in your maps.
+
+To preview the post effects first set the Rendering to No Lighting and then set the Shape to Plane.
+
+Black Ops II Vision previews aren't a 100% accurate to the game so it can be a bit brighter or darker in-game.
 
 # Credits
 * LG
