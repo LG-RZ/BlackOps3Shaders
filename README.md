@@ -10,8 +10,8 @@
  And it also contains 6 ready to use post effects that can be previewed in APE:
  * zm_afterlife_alcatraz
  * zm_afterlife_alcatraz_visionset
- * zm_afterlife_alcatraz_lerp
- * zm_afterlife_alcatraz_lerp_visionset
+ * zm_afterlife_alcatraz_lerp (Effect is layered on top of the frame)
+ * zm_afterlife_alcatraz_lerp_visionset (Effect is layered on top of the frame)
  * zm_whoswho
  * zm_whoswho_visionset
 
