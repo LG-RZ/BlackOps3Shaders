@@ -5,9 +5,6 @@
 #include "quaternion.hlsl"
 #include "gfxcore/hlslcorerept.h"
 
-#define USE_SIEGE_SKINNING 1
-#define USE_GPU_SKIN 1
-
 #if USE_SIEGE_SKINNING
 
 Texture2D<float4> gpuSkinBase : register(t18);
@@ -50,11 +47,21 @@ void siege_blend(
 void siege_skin(inout float3 position, inout float3 normal, inout float3 tangent, float4 inWeights, uint4 inBoneIndices, uint instance)
 {
 	uint width, totalFrames;
-	gpuSkinQuat.GetDimensions(width, totalFrames);
+	#if TOOLSGFX
 	
+	gpuSkinQuat.GetDimensions(width, totalFrames);
 	float offset = (instance ? gObjectInstanceData[instance].siegeAnimOffset : gObject.siegeAnimOffset) + gScene.siegeTime * 30;
 	float currentFrame = fmod(offset, totalFrames);
 	float nextFrame = (currentFrame + 1) % totalFrames;
+	
+	#else
+	
+	float4 data = modelInstanceBuffer[instance].siegeAnimStateOffset ? boneMatrixBuffer[modelInstanceBuffer[instance].siegeAnimStateOffset].extra : 0;
+	float currentFrame = data.x;
+	float nextFrame = data.y;
+	
+	#endif
+	
 	float interpolationFactor = frac(currentFrame);
 	
 	float3 blendedPosition = 0, blendedNormal = 0, blendedTangent = 0;
@@ -108,18 +115,25 @@ void linear_skin(inout float3 position, inout float3 normal, inout float3 tangen
 
 bool has_bones(const uint instance)
 {
+	#if TOOLSGFX
 	if (instance)
 		return gObjectInstanceData[instance].hasBones;
 	else
 		return gObject.hasBones;
+	#endif
+	return true;
 }
 
 bool has_siege_anim(const uint instance)
 {
+#if TOOLSGFX
 	if (instance)
 		return gObjectInstanceData[instance].hasSiegeAnim;
 	else
 		return gObject.hasSiegeAnim;
+	#else
+	return true;
+#endif
 }
 
 void skin(inout float3 position, inout float3 normal, inout float3 tangent, const float4 inWeights, const uint4 inBoneIndices, const uint instance)

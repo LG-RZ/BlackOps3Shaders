@@ -1,0 +1,86 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "Geometry Effect"
+	renderFlags = "lit transparent distortion"
+	availablePrefixes = "mc/ mcs/ wc/"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float3( "colorOffsets" )
+{
+	x = <cg01_x>
+	y = <cg01_y>
+	z = <cg01_z>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Color Offsets (RGB)"
+		sortindex = "10"
+		color = true
+	}
+}
+
+float2( "focalOffset" )
+{
+	x = <cg01_w>
+	y = <cg02_x>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Focal Offset"
+		sortindex = "15"
+	}
+}
+
+float2( "radius" )
+{
+	x = <cg02_y>
+	y = <cg02_z>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Radius"
+		sortindex = "20"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "unlit" )
+{
+	state = "blend + depth"
+	defines = "UNLIT_PASS"
+	source = "chromatic_aberration.hlsl"
+	vs = "vs_generic"
+	ps = "ps_generic"
+}
+
+Technique( "lit" )
+{
+	state = "blend + depth"
+	source = "chromatic_aberration.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		#if TOOLSGFX != "1"
+		iResolveScene = CodeTexture("resolvedPostSun")
+		#endif
+	}
+}
+
+Technique( "oit" ) : "lit"
+{
+	state = "fallback + depth + rez"
+	defines += "USE_OIT"
+}

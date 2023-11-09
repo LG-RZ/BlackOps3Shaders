@@ -119,6 +119,25 @@ float3 postfx_int16_to_float_framebuffer(const float3 color)
 	return color * int16ToFloat;
 #endif
 }
+
+float4 postfx_float_to_int16_framebuffer(const float4 color)
+{
+#if TOOLSGFX
+	return color;
+#else
+	return color * floatToInt16;
+#endif
+}
+
+float4 postfx_int16_to_float_framebuffer(const float4 color)
+{
+#if TOOLSGFX
+	return color;
+#else
+	return color * int16ToFloat;
+#endif
+}
+
 #if USE_T6_VISIONSET
 float4 postfx_apply_t6_visionset_to_lut(const float4 color)
 {
