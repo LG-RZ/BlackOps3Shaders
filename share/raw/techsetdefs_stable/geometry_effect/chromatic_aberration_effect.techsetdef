@@ -3,8 +3,8 @@
 Globals()
 {
 	category = "Geometry Effect"
-	renderFlags = "lit transparent distortion"
-	availablePrefixes = "mc/ mcs/ wc/"
+	renderFlags = "distortion fx"
+	availablePrefixes = "mc/ mcs/ wc/ ei/ el/"
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -13,6 +13,13 @@ Sampler( "bilinearClampler" )
 {
 	tile   = "no tile"
 	filter = "linear (mip none)"
+}
+
+Texture( "colorMap" )
+{
+	image = Image( "$white_diffuse" )
+	tweak = Tweak( "", "", "0" )
+	semantic = "diffuseMap", "HDR"
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,10 +84,4 @@ Technique( "lit" )
 		iResolveScene = CodeTexture("resolvedPostSun")
 		#endif
 	}
-}
-
-Technique( "oit" ) : "lit"
-{
-	state = "fallback + depth + rez"
-	defines += "USE_OIT"
 }

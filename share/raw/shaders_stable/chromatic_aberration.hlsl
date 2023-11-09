@@ -2,7 +2,6 @@
 #include "lib\transform.hlsl"
 #include "lib\gpu_skin.hlsl"
 #include "lib\vertdecl_vertex_tangentspace.hlsl"
-#include "lib\oit_draw.hlsl"
 
 struct VertexInput
 {
@@ -55,7 +54,6 @@ float2 focalOffset;
 float2 radius;
 float3 colorOffsets;
 
-[earlydepthstencil]
 float4 ps_main(const PixelInput pixel) : SV_TARGET
 {
 	#if !UNLIT_PASS
@@ -79,13 +77,12 @@ float4 ps_main(const PixelInput pixel) : SV_TARGET
 	float a = 1;
 	
 	float4 rgba = float4(r,g,b,a);
+	
 	#else
+	
 	float4 rgba = 1;
+	
 	#endif
 	
-	#if USE_OIT
-	return oit_draw(pixel.position.xyz, rgba, 0);
-	#else
 	return rgba;
-	#endif
 }
