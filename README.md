@@ -27,3 +27,4 @@ Visionset effects are using Black Ops II vision settings and their previews aren
 * LG
 * Scobulula
 * Dobby
+* Acerola
