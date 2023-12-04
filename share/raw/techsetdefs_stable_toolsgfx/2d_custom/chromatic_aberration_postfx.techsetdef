@@ -1,0 +1,90 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+Texture( "frameBuffer" )
+{
+	image    = Image( <colorMap00, $white_diffuse> )
+	semantic = "diffuseMap"
+	tweak    = Tweak()
+	{
+		category	= "Chromatic Aberration"
+		title		= "Preview Frame Buffer"
+		sortindex	= "0"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float3( "colorOffsets" )
+{
+	x = <cg01_x>
+	y = <cg01_y>
+	z = <cg01_z>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Color Offsets (RGB)"
+		sortindex = "10"
+		color = true
+	}
+}
+
+float2( "focalOffset" )
+{
+	x = <cg01_w>
+	y = <cg02_x>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Focal Offset"
+		sortindex = "15"
+	}
+}
+
+float2( "radius" )
+{
+	x = <cg02_y>
+	y = <cg02_z>
+	tweak = Tweak()
+	{
+		category  = "Chromatic Aberration"
+		title     = "Radius"
+		sortindex = "20"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	source = "postfx/chromatic_aberration_postfx.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		#if TOOLSGFX != "1"
+		frameBuffer = CodeTexture("resolvedPostSun")
+		#endif
+	}
+}
