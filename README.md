@@ -16,7 +16,7 @@
  * chromatic_aberration (Post Effect).
  * mtl_tv_chromatic_aberration (A material that can be applied on brushes or models that will apply the chromatic aberration effect on everything behind it).
 
-You can find them in the 'shader_templates' GDT.
+You can find all of these in the 'shader_templates' GDT.
 
 To preview the post effects first set the Rendering to No Lighting and then set the Shape to Plane by right clicking on the APE preview and setting each option.
 
