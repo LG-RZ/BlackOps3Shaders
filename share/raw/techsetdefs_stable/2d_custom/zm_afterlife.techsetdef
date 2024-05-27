@@ -27,26 +27,14 @@ Sampler( "bilinearSampler" )
 	filter = "linear (mip none)"
 }
 
-Texture( "lutTexture" )
-{
-	image    = Image( <colorMap02, $white_diffuse> )
-	semantic = "diffuseMap"
-	tweak    = Tweak()
-	{
-		category	= "Warp"
-		title		= "Preview Black Ops II Lut"
-		sortindex	= "14"
-	}
-}
-
-Texture( "frameBuffer" )
+Texture( "sceneTexture" )
 {
 	image    = Image( <colorMap00, $white_diffuse> )
-	semantic = "diffuseMap"
+	semantic = "2d"
 	tweak    = Tweak()
 	{
 		category	= "Warp"
-		title		= "Preview Frame Buffer"
+		title		= "Preview Scene"
 		sortindex	= "15"
 	}
 }
@@ -137,7 +125,7 @@ Technique( "lit", "unlit" )
 	ps = PixelShader()
 	{
 		#if TOOLSGFX != "1"
-		frameBuffer = CodeTexture( "resolvedPostSun" )
+		sceneTexture = CodeTexture( "resolvedScene" )
 		#endif
 	}
 }

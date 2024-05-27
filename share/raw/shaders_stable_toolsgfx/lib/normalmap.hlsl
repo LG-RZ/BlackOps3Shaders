@@ -1,6 +1,11 @@
 #ifndef __LIB_NORMAL_MAP__
 #define __LIB_NORMAL_MAP__
 
+/*
+
+// TO-DO:
+// Fix up this mess
+
 SamplerState normalSampler;
 Texture2D<float4> normalMap;
 
@@ -47,5 +52,6 @@ void add_detail(const Texture2D detailTexture, const SamplerState detailSampler,
 	// Add the detail
 	normal = normal + (detail * detailHeight);
 }
+*/
 
 #endif

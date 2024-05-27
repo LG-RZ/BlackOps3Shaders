@@ -6,9 +6,12 @@
 
 struct GBufferPixelOutput
 {
-	float4 albedo				: SV_TARGET0;
-	float4 normalGloss			: SV_TARGET1;
-	float4 reflectanceOcclusion	: SV_TARGET2;
+	float4 Albedo				: SV_TARGET0;
+	float4 NormalGloss			: SV_TARGET1;
+	float4 ReflectanceOcclusion	: SV_TARGET2;
+	#if GENERATE_MOTION_VECTOR
+	float2 Velocity				: SV_TARGET3;
+	#endif
 };
 
 #endif

@@ -2,7 +2,27 @@
 #define __CODE_CONSTANT_BUFFERS__
 
 #include "hlslcodedefines.h"
+#include "hlslcodeinstancing.h"
 #include "gfxcore/hlslcoretypes.h"
+
+#if TOOLSGFX
+
+cbuffer CodeSceneConstBuffer : register(b9) 
+{
+	CodeSceneConsts gScene : packoffset(c0.x);
+};
+
+cbuffer CodeObjectConstBuffer : register(b10) 
+{
+	CodeObjectConsts gObject : packoffset(c0.x);
+};
+
+cbuffer CodeObjectBonesConstBuffer : register(b11) 
+{
+	CodeObjectBonesConst gObjectBones[1024] : packoffset(c0.x);
+};
+
+#else
 
 cbuffer PerSceneConsts : register(b1)
 {
@@ -128,5 +148,27 @@ cbuffer LightingGlobals : register(b2)
 	uint oitMaxEntries : packoffset(c58.z);
 	uint numAttenuationVolumes : packoffset(c58.w);
 }
+
+cbuffer GenericsCBuffer : register(b3)
+{
+	float4 scriptVector0 : packoffset(c0);
+	float4 scriptVector1 : packoffset(c1);
+	float4 scriptVector2 : packoffset(c2);
+	float4 scriptVector3 : packoffset(c3);
+	float4 scriptVector4 : packoffset(c4);
+	float4 scriptVector5 : packoffset(c5);
+	float4 scriptVector6 : packoffset(c6);
+	float4 scriptVector7 : packoffset(c7);
+	float4 weaponParam0 : packoffset(c8);
+	float4 weaponParam1 : packoffset(c9);
+	float4 weaponParam2 : packoffset(c10);
+	float4 weaponParam3 : packoffset(c11);
+	float4 weaponParam4 : packoffset(c12);
+	float4 weaponParam5 : packoffset(c13);
+	float4 weaponParam6 : packoffset(c14);
+	float4 weaponParam7 : packoffset(c15);
+}
+
+#endif
 
 #endif

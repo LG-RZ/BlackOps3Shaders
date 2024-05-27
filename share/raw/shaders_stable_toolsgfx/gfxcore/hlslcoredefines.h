@@ -3,6 +3,8 @@
 
 #include "hlslcoreplatform.h"
 
+// Having these here might not be correct possibly moving it to hlslcoretypes
+
 struct CoreFogConstants
 {
 	float4 fogColor;
@@ -55,6 +57,15 @@ struct SSTLightingConstants
 	uint2 pad0;
 };
 
+struct SSTMinMaxConstants
+{
+	float2 sstToMinMaxScale;
+	float2 pad0;
+	float2 halfMinTexelSize;
+	float rcpInchesDimLevel0;
+	float shadowBiasInches;
+};
+
 struct CoreSunConstants
 {
 	float3 wldDir;
@@ -94,6 +105,43 @@ struct CoreWeatherConsts
 	float padding1;
 	float3 weatherTint2;
 	float padding2;
+};
+
+struct CoreVolumetricConstants
+{
+	uint firstSpotLight;
+	uint lastSpotLight;
+	uint firstOmniLight;
+	uint lastOmniLight;
+	uint firstProbe;
+	uint lastProbe;
+	uint padding0;
+	uint padding1;
+};
+
+struct CoreDecalConstantsPack
+{
+	float4 data[8];
+};
+
+struct CoreReflectionProbeAttenuationPack
+{
+	float4 data[6];
+};
+
+struct CoreReflectionProbePack
+{
+	float4 data[14];
+};
+
+struct CoreLightConstantsPack
+{
+	float4 data[15];
+};
+
+struct CoreCullConstantsPack
+{
+	float4 data[5];
 };
 
 #endif

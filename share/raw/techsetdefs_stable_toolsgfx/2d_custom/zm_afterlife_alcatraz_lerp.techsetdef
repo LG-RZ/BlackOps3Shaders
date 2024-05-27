@@ -27,26 +27,14 @@ Sampler( "bilinearSampler" )
 	filter = "linear (mip none)"
 }
 
-Texture( "lutTexture" )
-{
-	image    = Image( <colorMap02, $white_diffuse> )
-	semantic = "diffuseMap"
-	tweak    = Tweak()
-	{
-		category	= "Alcatraz Afterlife"
-		title		= "Preview Black Ops II Lut"
-		sortindex	= "14"
-	}
-}
-
-Texture( "frameBuffer" )
+Texture( "sceneTexture" )
 {
 	image    = Image( <colorMap, $white_diffuse> )
 	semantic = "diffuseMap"
 	tweak    = Tweak()
 	{
 		category	= "Alcatraz Afterlife"
-		title		= "Preview Frame Buffer"
+		title		= "Preview Scene"
 		sortindex	= "15"
 	}
 }
@@ -190,7 +178,7 @@ Technique( "lit", "unlit" )
 	ps = PixelShader()
 	{
 		#if TOOLSGFX != "1"
-		frameBuffer = CodeTexture( "resolvedPostSun" )
+		sceneTexture = CodeTexture( "resolvedPostSun" )
 		#endif
 	}
 }

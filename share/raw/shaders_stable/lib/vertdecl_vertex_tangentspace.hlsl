@@ -4,7 +4,7 @@
 #include "vertdecl_packedunitvec.hlsl"
 #include "vertdecl_vertex_binormal.hlsl"
 
-float3 decode_normal(const float3 normal)
+float3 Vertex_DecodeNormal(const float3 normal)
 {
 	#if TOOLSGFX
 	return normal;

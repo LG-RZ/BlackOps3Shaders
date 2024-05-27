@@ -1,9 +1,11 @@
 #ifndef __CODE_DEFINES__
 #define __CODE_DEFINES__
 
-#include "../gfxcore/hlslcoredefines.h"
-#include "../ToolsGfx/hlsl_to_pssl.h"
-#include "../gfxcore/hlslcorepssl_to_hlsl.h"
+#include "gfxcore/hlslcoredefines.h"
+#include "lib/hlsl_to_pssl.h"
+#include "gfxcore/hlslcorepssl_to_hlsl.h"
+
+#if TOOLSGFX
 
 struct CodeSceneTransforms
 {
@@ -90,5 +92,7 @@ struct CodeObjectBonesConst
 	row_major float3x4 objMatrixT;
 	float4 extra;
 };
+
+#endif
 
 #endif

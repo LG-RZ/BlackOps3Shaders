@@ -1,7 +1,7 @@
-#include "lib\globals.hlsl"
-#include "lib\transform.hlsl"
-#include "lib\gpu_skin.hlsl"
-#include "lib\vertdecl_vertex_tangentspace.hlsl"
+#include "lib/globals.hlsl"
+#include "lib/transform.hlsl"
+#include "lib/gpu_skin.hlsl"
+#include "lib/vertdecl_vertex_tangentspace.hlsl"
 
 struct VertexInput
 {
@@ -23,12 +23,12 @@ struct PixelInput
 #if TOOLSGFX
 
 SamplerState bilinearClampler : register(s0);
-Texture2D<float4> iResolveScene : register(t49);
+Texture2D<float4> sceneTexture : register(t49);
 
 #else
 
 SamplerState bilinearClampler : register(s1);
-Texture2D<float4> iResolveScene : register(t0);
+Texture2D<float4> sceneTexture : register(t0);
 
 #endif
 
@@ -40,11 +40,11 @@ PixelInput vs_main(const VertexInput vertex, const uint instance : INSTANCE_SEMA
 	float3 normal = 0;
 	float3 tangent = 0;
 	
-	skin(position, normal, tangent, vertex.weights, vertex.indices, instance);
+	GPUSkin_SkinVertex(position, normal, tangent, vertex.weights, vertex.indices, instance);
 	
-	position = transform_position_to_world(position, instance);
+	position = Transform_PositionToWorld(position, instance);
 
-	pixel.position = transform_offset_to_clip(position);
+	pixel.position = Transform_OffsetToClip(position);
 	pixel.color = vertex.color.a;
 
 	return pixel;
@@ -71,9 +71,9 @@ float4 ps_main(const PixelInput pixel) : SV_TARGET
 	
 	float2 direction = pos - 0.5;
 	
-	float r = iResolveScene.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.r) * pixel.color).r;
-	float g = iResolveScene.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.g) * pixel.color).g;
-	float b = iResolveScene.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.b) * pixel.color).b;
+	float r = sceneTexture.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.r) * pixel.color).r;
+	float g = sceneTexture.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.g) * pixel.color).g;
+	float b = sceneTexture.Sample(bilinearClampler, texCoords.xy + (direction * colorOffsets.b) * pixel.color).b;
 	float a = 1;
 	
 	float4 rgba = float4(r,g,b,a);

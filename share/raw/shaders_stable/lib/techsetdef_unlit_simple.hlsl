@@ -31,11 +31,11 @@ PixelInput vs_main(in VertexInput vertex, in uint instance : INSTANCE_SEMANTIC)
 	float3 tan = 0;
 	float3 color = vertex.color.xyz;
 	
-	skin(pos, normal, tan, vertex.weights, vertex.indices, instance);
+	GPUSkin_SkinVertex(pos, normal, tan, vertex.weights, vertex.indices, instance);
 	
-	pos = transform_offset_to_camera(transform_position_to_world(pos, instance));
-	normal = transform_normal_to_world(normal, instance);
-	tan = transform_normal_to_world(tan, instance);
+	pos = Transform_OffsetToCamera(Transform_PositionToWorld(pos, instance));
+	normal = Transform_NormalToWorld(normal, instance);
+	tan = Transform_NormalToWorld(tan, instance);
 
 	switch (gScene.lightingMode)
 	{
@@ -43,11 +43,11 @@ PixelInput vs_main(in VertexInput vertex, in uint instance : INSTANCE_SEMANTIC)
 			color = (dot(abs(normal), float3(0.6, 0.8, 1.0)) / dot(abs(normal), float3(1.0, 1.0, 1.0))) * vertex.color.xyz;
 			break;
 		case 2:
-			color = min(abs(dot(normalize(transform_offset_to_camera(normal)), normalize(pos))) + 0.1, 1) * vertex.color.xyz;
+			color = min(abs(dot(normalize(Transform_OffsetToCamera(normal)), normalize(pos))) + 0.1, 1) * vertex.color.xyz;
 			break;
 	}
 	
-	pixel.position = transform_camera_to_clip(pos);
+	pixel.position = Transform_CameraToClip(pos);
 	pixel.color = float4(color, vertex.color.w);
 	pixel.texCoords = vertex.texCoords;
 	
