@@ -80,4 +80,31 @@ float Luminance(const float3 rgb)
 	return dot(rgb, float3(0.212585, 0.715195, 0.072220));
 }
 
+float2 GetSkyRotation()
+{
+    #if TOOLSGFX
+    return gScene.skyRotation;
+    #else
+    return skyRotationTransition.xy;
+    #endif
+}
+
+float GetSkySize()
+{
+    #if TOOLSGFX
+    return gScene.skySize;
+    #else
+    return skyRotationTransition.z;
+    #endif
+}
+
+float GetSkyTransition()
+{
+    #if TOOLSGFX
+    return gScene.skyTransition;
+    #else
+    return skyRotationTransition.w;
+    #endif
+}
+
 #endif

@@ -15,6 +15,15 @@ float Fog_GetHeightFalloff()
     #endif
 }
 
+float Fog_GetSkyHeightFalloff()
+{
+    #if TOOLSGFX
+    return gScene.fog.skyHeightFalloff;
+    #else
+    return fogConstants.skyHeightFalloff;
+    #endif
+}
+
 float Fog_GetK0()
 {
     #if TOOLSGFX
@@ -24,12 +33,30 @@ float Fog_GetK0()
     #endif
 }
 
+float Fog_GetSkyK0()
+{
+    #if TOOLSGFX
+    return gScene.fog.skyK0;
+    #else
+    return fogConstants.skyK0;
+    #endif
+}
+
 float Fog_GetK0b()
 {
     #if TOOLSGFX
     return gScene.fog.K0b;
     #else
     return fogConstants.K0b;
+    #endif
+}
+
+float Fog_GetSkyK0b()
+{
+    #if TOOLSGFX
+    return gScene.fog.skyK0b;
+    #else
+    return fogConstants.skyK0b;
     #endif
 }
 
@@ -123,12 +150,30 @@ float2 Fog_GetAtmosphereFogDensityAtCamera()
     #endif
 }
 
+float2 Fog_GetAtmosphereSkyFogDensityAtCamera()
+{
+    #if TOOLSGFX
+    return gScene.fog.atmosphereskyfogdensityatcamera;
+    #else
+    return fogConstants.atmosphereskyfogdensityatcamera;
+    #endif
+}
+
 float2 Fog_GetAtmosphereFogHeightDensityScale()
 {
     #if TOOLSGFX
     return gScene.fog.atmospherefogheightdensityscale;
     #else
     return fogConstants.atmospherefogheightdensityscale;
+    #endif
+}
+
+float2 Fog_GetAtmosphereSkyFogHeightDensityScale()
+{
+    #if TOOLSGFX
+    return gScene.fog.atmosphereskyfogheightdensityscale;
+    #else
+    return fogConstants.atmosphereskyfogheightdensityscale;
     #endif
 }
 
@@ -186,6 +231,15 @@ float Fog_GetAtmosphereHazeBaseDistance()
     #endif
 }
 
+float Fog_GetAtmosphereHazeFadeDistance()
+{
+    #if TOOLSGFX
+    return gScene.fog.atmospherehazefadedist;
+    #else
+    return fogConstants.atmospherehazefadedist;
+    #endif
+}
+
 float Fog_GetAtmosphereSunStrength()
 {
     #if TOOLSGFX
@@ -204,71 +258,112 @@ float Fog_GetAtmosphereInScatterIntensity()
     #endif
 }
 
-// This is all a messs but it should work (Not tested)
-void Fog_ApplyAtmosphericFog(inout float3 color, float3 position)
+float Fog_GetWorldFogSkySize()
 {
-    float3 normalizedPosition = normalize(position);
-    float posLength = length(position);
+    #if TOOLSGFX
+    return gScene.fog.worldfogskysize;
+    #else
+    return fogConstants.worldfogskysize;
+    #endif
+}
 
-    float3 fogDensity;
-
-    if(Fog_GetBlendAmount() > 0.0)
+float3 Fog_GetAtmosphericFogDensity(
+    in float rayLength,
+    in float height,
+    in float blend,
+    in float2 distanceDensityScale,
+    in float2 distanceOffset,
+    in float2 densityAtCamera,
+    in float2 heightDensityScale,
+    in float3 totalDensity)
+{
+    [branch]
+    if(blend > 0.0)
     {
-        float2 distanceDensity = (posLength * Fog_GetAtmosphereFogDistanceDensityScale() + Fog_GetAtmosphereFogDistanceOffset()) * Fog_GetAtmosphereFogDensityAtCamera();
+        float2 distanceDensity = densityAtCamera * (distanceOffset + (rayLength * distanceDensityScale));
 
-        float2 heightMax = position.z * Fog_GetAtmosphereFogHeightDensityScale();
-        float2 heightMin = 1.0 - exp2(heightMax * -1.44269502);
+        float2 heightFalloff = abs(height) > 0.01 ? ((1.0 - exp2(height * heightDensityScale * -1.44269502)) / (height * heightDensityScale)) * distanceDensity : distanceDensity;
 
-        float2 heightFalloff = abs(position.z) > 0.01 ? (heightMin / heightMax) * distanceDensity : distanceDensity;
+        float3 densityX = exp2(heightFalloff.x * totalDensity);
+        float3 densityY = exp2(heightFalloff.y * totalDensity);
 
-        float3 densityX = exp2(heightFalloff.x * Fog_GetAtmosphereTotalDensity());
-        float3 densityY = exp2(heightFalloff.y * Fog_GetAtmosphereTotalDensity());
-
-        fogDensity = lerp(densityX, densityY, Fog_GetBlendAmount());
+        return lerp(densityX, densityY, blend);
     }
     else
     {
-        float distanceDensity = (posLength * Fog_GetAtmosphereFogDistanceDensityScale().x + Fog_GetAtmosphereFogDistanceOffset().x) * Fog_GetAtmosphereFogDensityAtCamera().x;
+        float distanceDensity = densityAtCamera.x * (distanceOffset.x + (rayLength * distanceDensityScale.x));
 
-        float heightMax = position.z * Fog_GetAtmosphereFogHeightDensityScale().x;
-        float heightMin = 1.0 - exp2(heightMax * -1.44269502);
+        float heightFalloff = abs(height) > 0.01 ? ((1.0 - exp2(height * heightDensityScale.x * -1.44269502)) / (height * heightDensityScale.x)) * distanceDensity : distanceDensity;
 
-        float heightFalloff = abs(position.z) > 0.01 ? (heightMin / heightMax) * distanceDensity : distanceDensity;
-
-        fogDensity = exp2(heightFalloff.x * Fog_GetAtmosphereTotalDensity());
+        return exp2(heightFalloff.x * totalDensity);
     }
+}
+
+// This is all a messs but it should work (Not tested)
+void Fog_ApplyAtmosphericFog(inout float3 color, float3 position, bool skyFog = false)
+{
+    float3 nPos = normalize(position);
+    float rayLength = length(position);
+
+    float2 fogDensityAtCamera = Fog_GetAtmosphereFogDensityAtCamera();
+    float2 fogHeightDensityScale = Fog_GetAtmosphereFogHeightDensityScale();
+
+    if(skyFog)
+    {
+        fogDensityAtCamera = Fog_GetAtmosphereSkyFogDensityAtCamera();
+        fogHeightDensityScale = Fog_GetAtmosphereSkyFogHeightDensityScale();
+    }
+
+    float3 fogDensity = Fog_GetAtmosphericFogDensity(
+        rayLength,
+        position.z,
+        Fog_GetBlendAmount(),
+        Fog_GetAtmosphereFogDistanceDensityScale(),
+        Fog_GetAtmosphereFogDistanceOffset(),
+        fogDensityAtCamera,
+        fogHeightDensityScale,
+        Fog_GetAtmosphereTotalDensity());
 
     fogDensity = fogDensity * Fog_GetAtmosphereExtinctionIntensity() + 1.0;
     fogDensity = saturate(fogDensity - Fog_GetAtmosphereExtinctionIntensity());
 
-    float unknown1 = dot(Fog_GetWorldSunFogDirection(), -normalizedPosition);
+    float unknown1 = dot(Fog_GetWorldSunFogDirection(), -nPos);
     float unknown2 = -Fog_GetAtmosphereMieSchlickK() * Fog_GetAtmosphereMieSchlickK() + 1.0;
     float unknown3 = pow(Fog_GetAtmosphereMieSchlickK() * -unknown1 + 1.0, 2) * 12.566371;
 
     unknown2 = unknown2 / unknown3;
 
-    posLength = saturate((posLength - Fog_GetAtmosphereHazeBaseDistance()) * Fog_GetAtmosphereHazeBaseDistance());
-
-    posLength = posLength * unknown2;
+    float rayHazeDistance = saturate((rayLength - Fog_GetAtmosphereHazeBaseDistance()) * Fog_GetAtmosphereHazeFadeDistance()) * unknown2;
 
     unknown1 = (pow(saturate(unknown1), 2) + 1.0) * 0.0596831031 - 1.0;
     unknown1 = unknown1 * Fog_GetAtmosphereSunStrength() + 1.0;
 
-    float3 density = (posLength * Fog_GetAtmosphereMieDensity()) + (unknown1 * Fog_GetAtmosphereRayleighDensity());
+    float3 density = (rayHazeDistance * Fog_GetAtmosphereMieDensity()) + (unknown1 * Fog_GetAtmosphereRayleighDensity());
 
     density *= Fog_GetAtmosphereInScatterIntensity();
 
     color = color * fogDensity + (density * (1.0 - fogDensity));
 }
 
-void Fog_ApplyWorldFog(inout float3 color, float3 position)
+void Fog_ApplyWorldFog(inout float3 color, float3 position, bool skyFog = false)
 {
-    float heightMax = position.z * Fog_GetHeightFalloff();
-    float heightMin = position.z * Fog_GetHeightFalloff() + Fog_GetK0();
+    float heightFalloff = Fog_GetHeightFalloff();
+    float k0 = Fog_GetK0();
+    float k0b = Fog_GetK0b();
 
-    heightMin = (heightMin < 0 ? exp2(heightMin * 1.44269502) : heightMin + 1.0) - Fog_GetK0b();
+    if(skyFog)
+    {
+        heightFalloff = Fog_GetSkyHeightFalloff();
+        k0 = Fog_GetSkyK0();
+        k0b = Fog_GetSkyK0b();
+    }
 
-    float heightPercentange = abs(heightMax) < 0.0001 ? saturate(Fog_GetK0b()) : heightMin / heightMax;
+    float heightMax = position.z * heightFalloff;
+    float heightMin = position.z * heightFalloff + k0;
+
+    heightMin = (heightMin < 0 ? exp2(heightMin * 1.44269502) : heightMin + 1.0) - k0b;
+
+    float heightPercentange = abs(heightMax) < 0.0001 ? saturate(k0b) : heightMin / (abs(heightMax) < 0.0001 ? 1 : heightMax);
 
     heightPercentange = exp2((heightPercentange * Fog_GetExpMul()) * length(position) + Fog_GetExpAdd());
 
@@ -280,15 +375,15 @@ void Fog_ApplyWorldFog(inout float3 color, float3 position)
     color = lerp(color, fogColor.rgb, colorBlendFactor * fogColor.a);
 }
 
-void Fog_ApplyFog(inout float3 color, float3 position)
+void Fog_ApplyFog(inout float3 color, float3 position, bool skyFog = false)
 {
     if(Fog_GetAtmosphereExtinctionIntensity() > 0.0)
     {
-        Fog_ApplyAtmosphericFog(color, position);
+        Fog_ApplyAtmosphericFog(color, position, skyFog);
     }
     else
     {
-        Fog_ApplyWorldFog(color, position);
+        Fog_ApplyWorldFog(color, position, skyFog);
     }
 }
 

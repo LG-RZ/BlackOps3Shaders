@@ -5,6 +5,8 @@
 
 // Having these here might not be correct possibly moving it to hlslcoretypes
 
+#define M_PI 3.141592653589793
+
 struct CoreFogConstants
 {
 	float4 fogColor;
