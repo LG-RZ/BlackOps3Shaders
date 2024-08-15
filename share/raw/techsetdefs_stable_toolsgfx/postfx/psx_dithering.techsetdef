@@ -1,0 +1,64 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Texture( "sceneTexture" )
+{
+	image    = Image( <colorMap00, $white_diffuse> )
+	semantic = "2d"
+	tweak    = Tweak()
+	{
+		category	= "PSX Dithering"
+		title		= "Preview Scene"
+		sortindex	= "5"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Bool( "usePSXColorPrecision" )
+{
+	value = <gCheckBox00>
+	tweak = Tweak()
+	{
+		category	= "PSX Dithering"
+		title		= "Limit to PSX Color Precision"
+		sortindex	= "10"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	source = "postfx/psx_dithering.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		#if TOOLSGFX != "1"
+		sceneTexture = CodeTexture( "resolvedScene" )
+		#endif
+	}
+}

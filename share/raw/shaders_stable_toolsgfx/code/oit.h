@@ -29,7 +29,7 @@ uint OIT_PackColor(float3 color)
 	uint green = bitFieldInsert(8, 8, asuint(color.g) >> 15, 0);
 	uint blue = bitFieldInsert(8, 16, asuint(color.b) >> 15, 0);
 
-	Result = (exponent << 1) + (red + green + blue);
+	Result = (red + green + blue) + (exponent << 1);
 
 	return Result;
 }

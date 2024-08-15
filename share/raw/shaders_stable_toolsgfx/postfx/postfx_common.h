@@ -46,6 +46,33 @@ void PostFx_FixPreviewResolution(in float2 position, inout float2 texCoords)
 	#endif
 }
 
+float4 PostFx_GetRenderTargetSize()
+{
+	#if TOOLSGFX
+
+    float2 resolution = GetRenderTargetSize().xy / float2(16.0, 9.0);
+
+	resolution = floor(resolution);
+
+	if(resolution.x < 1.0)
+		resolution.x = 1.0;
+	
+	if(resolution.y < 1.0)
+		resolution.y = 1.0;
+	
+	float factor = min(resolution.x, resolution.y);
+
+	float2 newResolution = factor * float2(16.0, 9.0);
+
+    return float4(newResolution, 1.0 / newResolution);
+
+    #else
+
+    return GetRenderTargetSize();
+
+    #endif
+}
+
 float PostFx_GetAspectRatio(bool fixResolution = true)
 {
     #if TOOLSGFX

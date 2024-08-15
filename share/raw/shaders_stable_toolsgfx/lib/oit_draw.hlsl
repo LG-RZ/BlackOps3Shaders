@@ -11,7 +11,7 @@
 RWTexture2D<uint> gOITFragmentCount : register(u6);
 RWTexture2DArray<uint2> gOITFragmentData : register(u7);
 
-float4 OIT_Draw(int2 position, float depth, float3 inColor, float alpha, uint maxEntries = OIT_LAYER_COUNT, bool computeSprites = false)
+float4 OIT_Draw(uint2 position, float depth, float3 inColor, float alpha, uint maxEntries = OIT_LAYER_COUNT, bool computeSprites = false)
 {
 	float3 color = inColor * alpha;
 
@@ -20,6 +20,10 @@ float4 OIT_Draw(int2 position, float depth, float3 inColor, float alpha, uint ma
 		uint count;
 
 		InterlockedAdd(gOITFragmentCount[position.xy], 1, count);
+
+		#if !TOOLSGFX
+		count = count & 0xFFFF;
+		#endif
 
 		if (count < maxEntries)
 		{
@@ -39,7 +43,7 @@ float4 OIT_Draw(int2 position, float depth, float3 inColor, float alpha, uint ma
 			return 0;
 		}
 
-		return float4(inColor.rgb, 1.0);
+		return float4(color, alpha);
 	}
 
 	return 0;

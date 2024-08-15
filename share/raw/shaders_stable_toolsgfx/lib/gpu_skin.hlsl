@@ -107,29 +107,29 @@ void GPUSkin_SkinVertexLinear(inout float3 position, inout float3 normal, inout 
 	if (inWeights.x > 0)
 	{
 		outPosition += GPUSkin_TransformPosition(position, inWeights.x, inBoneIndices.x, instance);
-		outNormal = GPUSkin_TransformNormal(normal, inWeights.x, inBoneIndices.x, instance);
-		outTangent = GPUSkin_TransformNormal(tangent, inWeights.x, inBoneIndices.x, instance);
+		outNormal += GPUSkin_TransformNormal(normal, inWeights.x, inBoneIndices.x, instance);
+		outTangent += GPUSkin_TransformNormal(tangent, inWeights.x, inBoneIndices.x, instance);
 	}
 		
 	if (inWeights.y > 0)
 	{
 		outPosition += GPUSkin_TransformPosition(position, inWeights.y, inBoneIndices.y, instance);
-		outNormal = GPUSkin_TransformNormal(normal, inWeights.y, inBoneIndices.y, instance);
-		outTangent = GPUSkin_TransformNormal(tangent, inWeights.y, inBoneIndices.y, instance);
+		outNormal += GPUSkin_TransformNormal(normal, inWeights.y, inBoneIndices.y, instance);
+		outTangent += GPUSkin_TransformNormal(tangent, inWeights.y, inBoneIndices.y, instance);
 	}
 		
 	if (inWeights.z > 0)
 	{
 		outPosition += GPUSkin_TransformPosition(position, inWeights.z, inBoneIndices.z, instance);
-		outNormal = GPUSkin_TransformNormal(normal, inWeights.z, inBoneIndices.z, instance);
-		outTangent = GPUSkin_TransformNormal(tangent, inWeights.z, inBoneIndices.z, instance);
+		outNormal += GPUSkin_TransformNormal(normal, inWeights.z, inBoneIndices.z, instance);
+		outTangent += GPUSkin_TransformNormal(tangent, inWeights.z, inBoneIndices.z, instance);
 	}
 		
 	if (inWeights.w > 0)
 	{
 		outPosition += GPUSkin_TransformPosition(position, inWeights.w, inBoneIndices.w, instance);
-		outNormal = GPUSkin_TransformNormal(normal, inWeights.w, inBoneIndices.w, instance);
-		outTangent = GPUSkin_TransformNormal(tangent, inWeights.w, inBoneIndices.w, instance);
+		outNormal += GPUSkin_TransformNormal(normal, inWeights.w, inBoneIndices.w, instance);
+		outTangent += GPUSkin_TransformNormal(tangent, inWeights.w, inBoneIndices.w, instance);
 	}
 
 	position = outPosition;

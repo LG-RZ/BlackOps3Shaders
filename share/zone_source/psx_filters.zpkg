@@ -1,0 +1,12 @@
+// Includes
+include,filters
+
+// Scripts
+scriptparsetree,scripts/postfx/_psx_filters.gsh
+scriptparsetree,scripts/postfx/_psx_filters.csc
+
+// Materials
+material,filter_postfx_psx_posterization
+material,filter_postfx_psx_downsample
+material,filter_postfx_psx_upsample
+material,filter_postfx_psx_dither

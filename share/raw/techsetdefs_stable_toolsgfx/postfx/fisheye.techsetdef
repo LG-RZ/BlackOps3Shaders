@@ -1,0 +1,126 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Texture( "sceneTexture" )
+{
+	image    = Image( <colorMap00, $white_diffuse> )
+	semantic = "2d"
+	tweak    = Tweak()
+	{
+		category	= "Fisheye Distortion"
+		title		= "Preview Scene"
+		sortindex	= "5"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float1( "radius" )
+{
+	x = <cg00_x>
+	tweak = Tweak()
+	{
+		category  = "Fisheye Distortion"
+		title     = "Radius"
+		sortindex = "10"
+		default   = "0"
+		range     = "0.0", "5.0", "0.01"
+	}
+}
+
+float1( "density" )
+{
+	x = <cg00_y>
+	tweak = Tweak()
+	{
+		category  = "Fisheye Distortion"
+		title     = "Density"
+		sortindex = "15"
+		default   = "0"
+		range     = "0.0", "5.0", "0.01"
+	}
+}
+
+float1( "intensity" )
+{
+	x = <cg00_z>
+	tweak = Tweak()
+	{
+		category  = "Fisheye Distortion"
+		title     = "Distortion Intensity"
+		sortindex = "20"
+		default   = "0"
+		range     = "0.0", "4.0", "0.01"
+	}
+}
+
+Bool( "invertGradient" )
+{
+	value = <gCheckBox00>
+	tweak = Tweak()
+	{
+		category	= "Fisheye Distortion"
+		title		= "Invert Gradient"
+		sortindex	= "35"
+	}
+}
+
+
+Bool( "invertDensity" )
+{
+	value = <gCheckBox01>
+	tweak = Tweak()
+	{
+		category	= "Fisheye Distortion"
+		title		= "Invert Density"
+		sortindex	= "40"
+	}
+}
+
+Bool( "displayGradient" )
+{
+	value = <gCheckBox02>
+	tweak = Tweak()
+	{
+		category	= "Fisheye Distortion"
+		title		= "Display Distortion (Tools Only)"
+		sortindex	= "45"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	source = "postfx/fisheye.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		#if TOOLSGFX != "1"
+		sceneTexture = CodeTexture( "resolvedScene" )
+		#endif
+	}
+}

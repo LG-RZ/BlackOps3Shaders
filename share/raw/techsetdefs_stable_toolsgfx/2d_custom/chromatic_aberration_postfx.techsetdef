@@ -22,14 +22,14 @@ Sampler( "bilinearClampler" )
 	filter = "linear (mip none)"
 }
 
-Texture( "frameBuffer" )
+Texture( "sceneTexture" )
 {
 	image    = Image( <colorMap00, $white_diffuse> )
-	semantic = "diffuseMap"
+	semantic = "2d"
 	tweak    = Tweak()
 	{
 		category	= "Chromatic Aberration"
-		title		= "Preview Frame Buffer"
+		title		= "Preview Scene"
 		sortindex	= "0"
 	}
 }
@@ -84,7 +84,7 @@ Technique( "lit", "unlit" )
 	ps = PixelShader() : "ps_generic"
 	{
 		#if TOOLSGFX != "1"
-		frameBuffer = CodeTexture("resolvedPostSun")
+		sceneTexture = CodeTexture("resolvedPostSun")
 		#endif
 	}
 }

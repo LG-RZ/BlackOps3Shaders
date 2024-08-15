@@ -1,0 +1,48 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "2d"
+	renderFlags = "none"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+Sampler( "pointClampSampler" )
+{
+    tile = "no tile"
+    filter = "nomip nearest"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float1( "downSamples" )
+{
+	x = <cg00_x>
+	tweak = Tweak()
+	{
+		category  = "Downsample Filter"
+		title     = "Downsamples"
+		sortindex = "10"
+		default   = "0"
+		range     = "1", "8", "1"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Technique( "unlit" )
+{
+	state = "replace + nocull"
+	source = "postfx/downsample.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		frameBuffer = CodeTexture( "resolvedScene" )
+	}
+}

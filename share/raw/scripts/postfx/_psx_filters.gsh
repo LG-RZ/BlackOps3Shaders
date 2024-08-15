@@ -1,0 +1,5 @@
+#define FILTER_PSX                              "filter_psx"
+#define FILTER_PSX_POSTERIZATION_MATERIAL       "filter_postfx_psx_posterization"
+#define FILTER_PSX_DOWNSAMPLE_MATERIAL          "filter_postfx_psx_downsample"
+#define FILTER_PSX_UPSAMPLE_MATERIAL            "filter_postfx_psx_upsample"
+#define FILTER_PSX_DITHER_MATERIAL              "filter_postfx_psx_dither"

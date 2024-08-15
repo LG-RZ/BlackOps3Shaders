@@ -1,0 +1,134 @@
+#include "lit_base_mid"
+
+Globals()
+{
+	category = "Geometry Custom"
+	renderFlags = "lit deferred opaque"
+	availablePrefixes = "mc/ mcs/ wc/"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Texture( "specColorMap" )
+{
+	image = Image( <specColorMap, $specular> )
+	semantic = "specularMap"
+	tweak = Tweak()
+	{
+		category  = "Specular and Gloss"
+		title     = "Specular Map"
+		sortindex = "20"
+	}
+}
+
+Texture( "heightMap" )
+{
+	image = Image( <alphaRevealMap, $white_reveal> )
+	semantic = "revealMap"
+	tweak = Tweak()
+	{
+		category  = "Parrallax Occlusion Mapping"
+		title     = "Height Map"
+		sortindex = "30"
+	}
+}
+
+//
+
+float1( "heightScale" )
+{
+	x = <cg01_w>
+	tweak = Tweak()
+	{
+		category  = "Parrallax Occlusion Mapping"
+		title     = "Height Map Scale"
+		sortindex = "35"
+		default   = "0.0", "0.0"
+		range     = "0.0", "1.0", "0.1"
+	}
+}
+
+float1( "minLayers" )
+{
+	x = <cg02_x>
+	tweak = Tweak()
+	{
+		category  = "Parrallax Occlusion Mapping"
+		title     = "Min Samples"
+		sortindex = "40"
+		default   = "0"
+		range     = "8", "128", "1"
+	}
+}
+
+float1( "maxLayers" )
+{
+	x = <cg02_y>
+	tweak = Tweak()
+	{
+		category  = "Parrallax Occlusion Mapping"
+		title     = "Max Samples"
+		sortindex = "45"
+		default   = "0"
+		range     = "16", "128", "1"
+	}
+}
+
+Bool( "clampUVs" )
+{
+	value = <gCheckBox00>
+	tweak = Tweak()
+	{
+		category	= "Parrallax Occlusion Mapping"
+		title		= "Clamp UVs"
+		sortindex	= "50"
+	}
+}
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "build shadowmap depth" ) :  "build shadowmap depth base"
+{}
+
+#if TETRAHEDRON_OMNI_SHADOWS=="1"
+Technique( "build shadowmap depth planes" ) : "build shadowmap depth planes base"
+{}
+#endif
+
+Technique( "build shadowmap depth layered" ) :  "build shadowmap depth layered base"
+{}
+
+Technique( "unlit" )
+{
+	state = "replace + depth"
+	defines = "USE_COLOR_TINT"
+	source = "techsetdef_unlit_simple.hlsl"
+	vs = "vs_generic"
+	ps = "ps_generic"
+}
+
+Technique( "gbuffer" )
+{
+	state = "gbuffer opaque"
+	defines = "USE_COLOR_SPEC", "USE_COLOR_TINT"
+	source = "gbuffer_lit_pom.hlsl"
+	vs = "vs_generic"
+	ps = "ps_generic"
+}
+
+Technique( "gbuffer motion vector" ) : "gbuffer"
+{
+	defines += "GENERATE_MOTION_VECTOR"
+}
+
+Technique( "debug color texel" )
+{
+	state = "replace + depth"
+	source = "ToolsGfx/debug_texeldensity.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		defines = "DEBUG_COLOR_TEXELS"
+	}
+}

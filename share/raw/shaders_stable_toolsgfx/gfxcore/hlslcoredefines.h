@@ -123,27 +123,52 @@ struct CoreVolumetricConstants
 
 struct CoreDecalConstantsPack
 {
-	float4 data[8];
+	uint4 data[8];
 };
 
 struct CoreReflectionProbeAttenuationPack
 {
-	float4 data[6];
+	uint4 data[6];
 };
 
 struct CoreReflectionProbePack
 {
-	float4 data[14];
+	float3 offOrigin; // 0x0 -> 0xC
+	float3x3 invOrient; // 0xC -> 0x30
+	float3 size; // 0x30 -> 0x3C
+	float3 probeCenter; // 0x3C -> 0x48
+	float weightMul; // 0x48 -> 0x4C
+	float3 volumeCoordMul; // 0x4C -> 0x58
+	float3 volumeCoordAdd; // 0x58 -> 0x64
+	float exposure; // 0x64 -> 0x68
+	float3 avgCubeColor; // 0x68 -> 0x74
+	uint firstBlend_fade; // 0x74 -> 0x78 // packed as: (ushort and half)
+	uint arraySlot_numBlends; // 0x78 -> 0x7C
+	float4 prbClipPlanes[6]; // 0x80 -> 0xE0
 };
 
 struct CoreLightConstantsPack
 {
-	float4 data[15];
+	float3 offOrigin;
+	float3 color;
+	uint flags;
+	float nearMul;
+	float nearAdd;
+	float farMul;
+	float farAdd;
+	float dAttenuation;
+	float mShadowPenumbraRadius;
+	float3 offProjOrigin;
+	uint4 data[11];
 };
 
 struct CoreCullConstantsPack
 {
-	float4 data[5];
+	float3 origin;
+	half3 bbExtents;
+	half data1;
+	uint3 data2;
+	uint4 data3[3];
 };
 
 #endif

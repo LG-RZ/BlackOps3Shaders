@@ -1,0 +1,105 @@
+#include "lit_base_shaders"
+
+Globals()
+{
+	category = "2d"
+	#if TOOLSGFX != "1"
+	renderFlags = "none"
+	#else
+	renderFlags = RenderFlags()
+	{
+		isOpaque = true
+	}
+	#endif
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "bilinearClampler" )
+{
+	tile   = "no tile"
+	filter = "linear (mip none)"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Texture( "sceneTexture" )
+{
+	image    = Image( <colorMap00, $white_diffuse> )
+	semantic = "2d"
+	tweak    = Tweak()
+	{
+		category	= "Posterization Filter"
+		title		= "Preview Scene"
+		sortindex	= "5"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float1( "redSteps" )
+{
+	x = <cg00_x>
+	tweak = Tweak()
+	{
+		category  = "Posterization Filter"
+		title     = "Red Steps"
+		sortindex = "10"
+		default   = "1"
+		range     = "1", "256", "1"
+	}
+}
+
+float1( "greenSteps" )
+{
+	x = <cg00_y>
+	tweak = Tweak()
+	{
+		category  = "Posterization Filter"
+		title     = "Green Steps"
+		sortindex = "20"
+		default   = "1"
+		range     = "1", "256", "1"
+	}
+}
+
+float1( "blueSteps" )
+{
+	x = <cg00_z>
+	tweak = Tweak()
+	{
+		category  = "Posterization Filter"
+		title     = "Blue Steps"
+		sortindex = "30"
+		default   = "1"
+		range     = "1", "256", "1"
+	}
+}
+
+float1( "brightnessSteps" )
+{
+	x = <cg00_w>
+	tweak = Tweak()
+	{
+		category  = "Posterization Filter"
+		title     = "Brightness Steps"
+		sortindex = "40"
+		default   = "1"
+		range     = "1", "256", "1"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "lit", "unlit" )
+{
+	state = "replace + nocull"
+	source = "postfx/posterization.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader()
+	{
+		#if TOOLSGFX != "1"
+		sceneTexture = CodeTexture( "resolvedScene" )
+		#endif
+	}
+}
