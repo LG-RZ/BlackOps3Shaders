@@ -84,7 +84,7 @@
 		function enable_example_filter()
 		{
 			if(!isdefined(level.postFxFilters["example_filter"]))
-				init_psx_filter();
+				init_example_filter();
 			
 			self filters::enable_filter("example_filter");
 		}
